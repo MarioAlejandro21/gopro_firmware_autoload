@@ -1,6 +1,7 @@
 from shutil import copytree, rmtree
-from os.path import exists, join, isdir
-from os import getcwd, system, listdir
+from os.path import exists, join, isfile
+from os import getcwd, system, listdir, remove
+from subprocess import run
 from re import match
 from sys import exit
 from yaml import safe_load
@@ -16,12 +17,12 @@ def get_firmware_folder_with_sn_or_none(sn):
             'folder_name': "Hero8 Black"
         },
         {
-            'sn_pattern': "^C344",
-            'folder_name': "Hero9 Black"
-        },
-        {
             'sn_pattern': "^C34613B45",
             'folder_name': "Hero10 Bones"
+        },
+        {
+            'sn_pattern': "^C344",
+            'folder_name': "Hero9 Black"
         },
         {
             'sn_pattern': "^C346",
@@ -77,40 +78,69 @@ def assure_sd_card_available():
         input("SD card unavailable, press enter to check again...")
         assure_sd_card_available()
 
+
 def get_available_folder_names(model):
     
     cwd = join(source_path, model)
 
-    return [item for item in listdir(cwd) if isdir(join(cwd, item)) and "SD" in item]
+    return [item for item in listdir(cwd) if "SD" in item]
 
-def select_firmware_option(ops: list):
+
+def select_firmware_option(ops: list, main_folder_name):
     
     ops.insert(0, "Factory Reset")
 
-    print("Available firmwares:")
+    print("Available firmwares (type x for scanning other device):")
 
-    for i, op in ops:
+    for i, op in enumerate(ops):
         print(f"{i}. {op}")
 
-    res = input("Your selection: ")
-    return
+    while True:
 
+        res = input("Your selection: ").lower()
 
+        if res == "x":
+            break
+        elif not res.isdigit() or int(res) >= len(ops):
+            print("Invalid option, please try again.")
+        else:
+            index = int(res)
+            selection = ops[index]
+            firmware_path = join(source_path, main_folder_name, selection)
+            print(f"You selected location {firmware_path}")
+            format_sd_card()
+            if selection == "Factory Reset":
+                open(join(sd_path, "factory_reset.txt"), 'a').close()
+            else:
+                print("Loading to SD card...")
+                cmd = f"xcopy \"{firmware_path}\*\" {sd_path} /s"
+                run(cmd, shell=True)
+            break
+
+def format_sd_card():
+    print("Formatting sd card...")
+    for item in listdir(sd_path):
+        rm_path = join(sd_path, item)
+        if isfile(rm_path):
+            remove(rm_path)
+        else:
+            rmtree(rm_path)
+    print("Formating complete.")
 
 
 load_config_paths()
 
 assure_sd_card_available()
 
-system('clear')
+system("cls")
 
-print('Automatic loader')
+print('Welcome to auto firmware for GO PRO.')
 
 while True:
-    res = input("Scan serial number of the camera (or type x to exit): ")
+    res = input("Scan serial number of the camera (or type x to exit): ").capitalize()
     firmware_folder_name = get_firmware_folder_with_sn_or_none(res)
-    
-    if res == "x":
+    print(f"{firmware_folder_name} selected")
+    if res == "X":
         break
 
     elif not firmware_folder_name:
@@ -118,4 +148,5 @@ while True:
     
     else:
         firmware_options = get_available_folder_names(firmware_folder_name)
-        select_firmware_option(firmware_options)
+        print(firmware_options)
+        select_firmware_option(firmware_options, firmware_folder_name)
