@@ -41,16 +41,17 @@ def get_firmware_folder_with_sn_or_none(sn):
             'folder_name': "MAX"
         },
     ]
-
+    result = None
     for info in lookup_model_info:
         
         pattern = info["sn_pattern"]
         folder = info["folder_name"]
 
         if match(pattern=pattern, string=sn):
-            return folder
+            result = folder
+            break
 
-    return None
+    return result
 
 
 def load_config_paths():
@@ -107,15 +108,15 @@ def select_firmware_option(ops: list, main_folder_name):
             index = int(res)
             selection = ops[index]
             firmware_path = join(source_path, main_folder_name, selection)
-            print(f"You selected location {firmware_path}")
             format_sd_card()
             if selection == "Factory Reset":
                 open(join(sd_path, "factory_reset.txt"), 'a').close()
             else:
-                print("Loading to SD card...")
+                print("Saving files to SD card, please wait...")
                 cmd = f"xcopy \"{firmware_path}\*\" {sd_path} /s"
                 run(cmd, shell=True)
             break
+
 
 def format_sd_card():
     print("Formatting sd card...")
@@ -137,9 +138,8 @@ system("cls")
 print('Welcome to auto firmware for GO PRO.')
 
 while True:
-    res = input("Scan serial number of the camera (or type x to exit): ").capitalize()
+    res = input("Scan serial number of the camera (or type x to exit): ").upper()
     firmware_folder_name = get_firmware_folder_with_sn_or_none(res)
-    print(f"{firmware_folder_name} selected")
     if res == "X":
         break
 
@@ -147,6 +147,6 @@ while True:
         print("Invalid serial number or model not supported.")
     
     else:
+        print(f"{firmware_folder_name} model selected.")
         firmware_options = get_available_folder_names(firmware_folder_name)
-        print(firmware_options)
         select_firmware_option(firmware_options, firmware_folder_name)
