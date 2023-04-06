@@ -13,7 +13,7 @@ sd_path = ""
 def get_firmware_folder_with_sn_or_none(sn):
     lookup_model_info = [
         {
-            'sn_pattern': "^C333",
+            'sn_pattern': "^C333(?:13|34|42)",
             'folder_name': "Hero8 Black"
         },
         {
@@ -21,23 +21,23 @@ def get_firmware_folder_with_sn_or_none(sn):
             'folder_name': "Hero10 Bones"
         },
         {
-            'sn_pattern': "^C344",
+            'sn_pattern': "^C344(?:13|34|42)",
             'folder_name': "Hero9 Black"
         },
         {
-            'sn_pattern': "^C346",
+            'sn_pattern': "^C346(?:13|42)",
             'folder_name': "Hero10 Black"
         },
         {
-            'sn_pattern': "^C349",
+            'sn_pattern': "^C349(?:11|42)",
             'folder_name': "Hero11 Pismo"
         },
         {
-            'sn_pattern': "^C347",
+            'sn_pattern': "^C34713",
             'folder_name': "Hero11 Sultan"
         },
         {
-            'sn_pattern': "^C335",
+            'sn_pattern': "^C335(?:13|34)",
             'folder_name': "MAX"
         },
     ]
