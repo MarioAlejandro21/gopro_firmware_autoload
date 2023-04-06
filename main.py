@@ -109,10 +109,10 @@ def select_firmware_option(ops: list, main_folder_name):
             selection = ops[index]
             firmware_path = join(source_path, main_folder_name, selection)
             format_sd_card()
+            print("Saving files to SD card, please wait...")
             if selection == "Factory Reset":
                 open(join(sd_path, "factory_reset.txt"), 'a').close()
             else:
-                print("Saving files to SD card, please wait...")
                 cmd = f"xcopy \"{firmware_path}\*\" {sd_path} /s"
                 run(cmd, shell=True)
             break
@@ -126,14 +126,13 @@ def format_sd_card():
             remove(rm_path)
         else:
             rmtree(rm_path)
-    print("Formating complete.")
+
 
 
 load_config_paths()
 
 assure_sd_card_available()
 
-system("cls")
 
 print('Welcome to auto firmware for GO PRO.')
 
@@ -147,6 +146,7 @@ while True:
         print("Invalid serial number or model not supported.")
     
     else:
+        system("cls")
         print(f"{firmware_folder_name} model selected.")
         firmware_options = get_available_folder_names(firmware_folder_name)
         select_firmware_option(firmware_options, firmware_folder_name)
