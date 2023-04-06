@@ -1,0 +1,6 @@
+.devcontainer
+.pytest_cache
+.vscode
+build
+dist
+main.spec
