@@ -114,7 +114,7 @@ def select_firmware_option(ops: list, main_folder_name):
                 open(join(sd_path, "factory_reset.txt"), 'a').close()
             else:
                 cmd = f"robocopy \"{firmware_path}\" {sd_path} /mt:16 /s /nfl /ndl /np /njh /njs"
-                run(cmd)
+                run(["cmd", "/c" ,cmd])
             break
 
 
@@ -127,10 +127,10 @@ def format_sd_card():
         rm_path = sd_path + item
         if isfile(rm_path):
             path = f"del /q \"{rm_path}\""
-            run(path, shell=True)
+            run(["cmd", "/c", path])
         else:
             path = f"rmdir /s /q \"{rm_path}\""
-            run(path, shell=True)
+            run(["cmd", "/c", path])
 
 
 
