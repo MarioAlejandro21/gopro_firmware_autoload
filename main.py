@@ -113,7 +113,7 @@ def select_firmware_option(ops: list, main_folder_name):
             if selection == "Factory Reset":
                 open(join(sd_path, "factory_reset.txt"), 'a').close()
             else:
-                run(["robocopy", firmware_path, sd_path, "/mt:16", "/s", "/nfl", "/ndl", "/np", "/njh", "/njs"], shell=True)
+                run(["robocopy", firmware_path, sd_path, "/s", "/nfl", "/ndl", "/np", "/njh", "/njs"], shell=True)
             break
 
 
