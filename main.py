@@ -5,7 +5,6 @@ from subprocess import run
 from re import match
 from sys import exit
 from yaml import safe_load
-import requests
 
 # Globals
 SOURCE_PATH = ""
