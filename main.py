@@ -1,10 +1,11 @@
 from shutil import rmtree
 from os.path import exists, join, isfile, getmtime
-from os import getcwd, system, listdir, walk
+from os import getcwd, system, listdir, walk, remove, chmod
 from subprocess import run
 from re import match
 from sys import exit
 from yaml import safe_load
+from stat import S_IRWXU
 
 # Globals
 SOURCE_PATH = ""
@@ -74,7 +75,11 @@ def format_sd_card():
     for item in dirs:
         rm_path = join(SD_PATH, item)
         if isfile(rm_path):
-            run(["del", "/q", rm_path], shell=True)
+            try:
+                remove(rm_path)
+            except:
+                chmod(rm_path, S_IRWXU)
+                remove(rm_path)
         else:
             run(["rmdir", "/q", "/s", rm_path], shell=True)
 
