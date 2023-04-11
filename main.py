@@ -175,7 +175,8 @@ while True:
         print(f"{model} model selected.")
         firmware_selection = get_firmware_selection_or_x(model)
         if firmware_selection == "X":
-            break
+            system("cls")
+            continue
 
         local_firmware_path = join(TEMP_FILES_PATH, model, firmware_selection)
 
