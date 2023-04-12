@@ -81,7 +81,7 @@ def format_sd_card():
                 chmod(rm_path, S_IRWXU)
                 remove(rm_path)
         else:
-            run(["rmdir", "/q", "/s", rm_path], shell=True)
+            rmtree(rm_path)
 
 
 def get_firmware_selection_or_x(model_name):
@@ -135,9 +135,6 @@ def has_firmware_been_updated(model, firmware_option):
     last_modification_time_local = max(
         [getmtime(root) for root, _, _ in walk(local_root)]
     )
-
-    if last_modification_time_local != last_modification_time_remote:
-        print(last_modification_time_local, last_modification_time_remote)
 
     return last_modification_time_local != last_modification_time_remote
 
