@@ -59,11 +59,16 @@ def assure_sd_card_available():
         input("SD card unavailable, press enter to check again...")
         assure_sd_card_available()
 
+def isdir(path):
+    if match(".+\..+", path):
+        return False
+    else:
+        return True
 
 def get_available_folder_names(model):
     cwd = join(SOURCE_PATH, model)
 
-    return [item for item in listdir(cwd) if not isfile(item)]
+    return [item for item in listdir(cwd) if isdir(join(cwd, item))]
 
 
 
@@ -109,7 +114,7 @@ def get_firmware_selection_or_x(model_name):
 
 
 def update_firmware_to_temp_files(model, firmware_option):
-    print("Updating local copy...")
+    print("Updating local copy, this may take longer, please wait...")
     dest_path = join(TEMP_FILES_PATH, model, firmware_option)
     src_path = join(SOURCE_PATH, model, firmware_option)
 
@@ -141,7 +146,7 @@ def has_firmware_been_updated(model, firmware_option):
 
 def save_firmware_files_to_sd_card(model, firmware_option):
     firmware_path = join(TEMP_FILES_PATH, model, firmware_option)
-    print("Saving files to sd card, please wait...")
+    print("Saving files to sd card...")
     run(
         [
             "robocopy",
