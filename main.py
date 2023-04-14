@@ -59,8 +59,8 @@ def assure_sd_card_available():
         input("SD card unavailable, press enter to check again...")
         assure_sd_card_available()
 
-def isdir(path):
-    if match(".+\..+", path):
+def isdir_for_remote_path(path):
+    if match(".*\..+", path):
         return False
     else:
         return True
@@ -68,7 +68,7 @@ def isdir(path):
 def get_available_folder_names(model):
     cwd = join(SOURCE_PATH, model)
 
-    return [item for item in listdir(cwd) if isdir(join(cwd, item))]
+    return [item for item in listdir(cwd) if isdir_for_remote_path(item)]
 
 
 
